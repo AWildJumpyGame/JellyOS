@@ -84,7 +84,10 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "p", lazy.spawncmd(),
         desc="Spawn a command using a prompt widget"),
+
+
 ]
+
 
 groups = [Group(i) for i in "123456"]
 
@@ -95,12 +98,9 @@ for i in groups:
             desc="Switch to group {}".format(i.name)),
 
         # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True),
-            desc="Switch to & move focused window to group {}".format(i.name)),
-        # Or, use below if you prefer not to switch to that group.
-        # # mod1 + shift + letter of group = move focused window to group
-        # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-        #     desc="move focused window to group {}".format(i.name)),
+        Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
+            desc="Move focused window to group {}".format(i.name)),
+
     ])
 
 layouts = [
@@ -192,10 +192,11 @@ auto_minimize = True
 
 @hook.subscribe.startup_once
 def autostart():
-    auto = os.path.expenduser("~/.config/qtile/autostart.sh")
-    subprocess.run([auto])
-
+    lazy.subprocess("picom"),
+    lazy.subprocess("ulauncher"),
+    lazy.spawn("firefox")
 
 
 
 wmname = "LG3D"
+
