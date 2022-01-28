@@ -3,8 +3,6 @@
 
 nitrogen --restore &
 
-ulauncher &
+picom -b &
 
-picom &
 
-firefox &

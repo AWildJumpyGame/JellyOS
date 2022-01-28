@@ -192,11 +192,10 @@ auto_minimize = True
 
 @hook.subscribe.startup_once
 def autostart():
-    lazy.subprocess("picom"),
-    lazy.subprocess("ulauncher"),
-    lazy.spawn("firefox")
-
-
+    home = os.path.expanduser('~')
+    subprocess.call([home + '/.config/qtile/autostart.sh'])
+   # subprocess.run(["alttab"])
+   # subprocess.run(["ulauncher"])
 
 wmname = "LG3D"
 
