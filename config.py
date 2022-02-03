@@ -32,7 +32,31 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
 mod = "mod4"
+mod1 = "mod1"
+
 terminal = "kitty -e fish"
+
+
+def get_monitors():
+    xr = subprocess.check_output('xrandr --query | grep " connected"', shell=True).decode().split('\n')
+    monitors = len(xr) - 1 if len(xr) > 2 else len(xr)
+    return monitors
+
+
+monitors = get_monitors()
+
+# Run autorandr --change and restart Qtile on screen change
+
+
+@hook.subscribe.screen_change
+def set_screens(event):
+    subprocess.run(["autorandr", "--change"])
+    # lazy.spawn("mydock")
+    qtile.restart()
+
+
+
+
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -56,6 +80,7 @@ keys = [
         desc="Move window down"),
     Key([mod, "shift"], "Up", lazy.layout.shuffle_up(), desc="Move window up"),
 
+
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
     Key([mod, "control"], "Left", lazy.layout.grow_left(),
@@ -71,10 +96,13 @@ keys = [
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
+
     Key([mod, "shift"], "Return", lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "f", lazy.spawn("firefox"), desc="Launch firefox"),
+    Key([mod], "r", lazy.spawn("rofi -combi-modi window,drun,ssh -font 'hack 10' -show combi"), desc="Launch rofi"),
+    Key([mod1], "Tab", lazy.spawn("rofi -show window -font 'hack 10'"), desc="Launch rofi as an alttab"),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -113,21 +141,11 @@ layouts = [
         ),
 
     layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
+
 ]
 
 widget_defaults = dict(
-    font='sans',
+    font='Iosevka',
     fontsize=12,
     padding=3,
 )
@@ -194,8 +212,6 @@ auto_minimize = True
 def autostart():
     home = os.path.expanduser('~')
     subprocess.call([home + '/.config/qtile/autostart.sh'])
-   # subprocess.run(["alttab"])
-   # subprocess.run(["ulauncher"])
+
 
 wmname = "LG3D"
-
