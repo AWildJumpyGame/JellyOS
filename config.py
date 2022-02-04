@@ -34,7 +34,7 @@ from libqtile.utils import guess_terminal
 mod = "mod4"
 mod1 = "mod1"
 
-terminal = "kitty -e fish"
+terminal = "kitty -e zsh"
 
 
 def get_monitors():
