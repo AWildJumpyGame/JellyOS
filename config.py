@@ -34,25 +34,9 @@ from libqtile.utils import guess_terminal
 mod = "mod4"
 mod1 = "mod1"
 
-terminal = "kitty -e zsh"
+terminal = "kitty -e fish"
 
 
-def get_monitors():
-    xr = subprocess.check_output('xrandr --query | grep " connected"', shell=True).decode().split('\n')
-    monitors = len(xr) - 1 if len(xr) > 2 else len(xr)
-    return monitors
-
-
-monitors = get_monitors()
-
-# Run autorandr --change and restart Qtile on screen change
-
-
-@hook.subscribe.screen_change
-def set_screens(event):
-    subprocess.run(["autorandr", "--change"])
-    # lazy.spawn("mydock")
-    qtile.restart()
 
 
 
