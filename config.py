@@ -115,12 +115,15 @@ for i in groups:
 
     ])
 
+
+
+
 layouts = [
     layout.Columns(
         border_focus_stack=['#d75f5f', '#8f3d3d'],
         border_width=3,
-        border_focus="#0000cc",
-        border_normal="#b6c4cf",
+        border_focus="#FF4151",
+        border_normal="#81A1C1",
         margin = 12,
         ),
 
@@ -129,7 +132,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='Iosevka',
+    font='JetBrains',
     fontsize=12,
     padding=3,
 )
@@ -154,12 +157,34 @@ screens = [
                 widget.QuickExit(),
             ],
             24,
+             border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+        ),
+    ),
+]
+screens = [
+    Screen(
+        top=bar.Bar(
+            [
+                widget.GroupBox(),
+                widget.Prompt(),
+                widget.WindowName(),
+                widget.Chord(
+                    chords_colors={
+                        'launch': ("#ff0000", "#ffffff"),
+                    },
+                    name_transform=lambda name: name.upper(),
+                ),
+
+                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+                widget.QuickExit(),
+            ],
+            24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
     ),
 ]
-
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
@@ -181,8 +206,9 @@ floating_layout = layout.Floating(float_rules=[
     Match(wm_class='makebranch'),  # gitk
     Match(wm_class='maketag'),  # gitk
     Match(wm_class='ssh-askpass'),  # ssh-askpass
-    Match(title='branchdialog'),  # gitk
-    Match(title='pinentry'),  # GPG key password entry
+    Match(title='branchdialog'),# gitk
+    Match(title='Unity'),#Unity
+    Match(title='pinentry-gtk-2'),  # GPG key password entry
 ])
 auto_fullscreen = True
 focus_on_window_activation = "smart"
