@@ -31,14 +31,36 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
+#Keys
 mod = "mod4"
 mod1 = "mod1"
 
+
+
+#Launchers
 terminal = "kitty -e fish"
+rofiLaunch = "rofi -combi-modi window,drun,ssh -show combi"
+rofiAltTab = "rofi -show window -font 'hack 10'"
 
 
 
 
+
+#Themes
+
+#Based from material-ocean
+oceanColors = [
+"#0F111a", #Primary  (Gray)
+"00010A",  #Secondary(Dark-Blue-Grey)
+"#FF4151", #Accent   (Pink)
+"3B4252",  #0        (MediumBlue)
+"#BF616A", #1        (LightPink)
+
+
+
+
+
+]
 
 
 
@@ -85,8 +107,8 @@ keys = [
         desc="Toggle between split and unsplit sides of stack"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "f", lazy.spawn("firefox"), desc="Launch firefox"),
-    Key([mod], "r", lazy.spawn("rofi -combi-modi window,drun,ssh -font 'hack 10' -show combi"), desc="Launch rofi"),
-    Key([mod1], "Tab", lazy.spawn("rofi -show window -font 'hack 10'"), desc="Launch rofi as an alttab"),
+    Key([mod], "r", lazy.spawn(rofiLaunch), desc="Launch rofi"),
+    Key([mod1], "Tab", lazy.spawn(rofiAltTab), desc="Launch rofi as an alttab"),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -101,21 +123,20 @@ keys = [
 ]
 
 
-groups = [Group(i) for i in "123456"]
-
-for i in groups:
+leftGroups = [Group(i) for i in "123"]
+for i in leftGroups:
     keys.extend([
-        # mod1 + letter of group = switch to group
-        Key([mod], i.name, lazy.group[i.name].toscreen(),
-            desc="Switch to group {}".format(i.name)),
+        Key([mod],i.name, lazy.group[i.name].toscreen(0)),
+        Key([mod,"shift"], i.name, lazy.window.togroup(i.name)),
+        ]),
+rightGroups = [Group(i) for i in "456"]
+for i in rightGroups:
+    keys.extend([
+        Key([mod],i.name, lazy.group[i.name].toscreen(1)),
+        Key([mod,"shift"], i.name, lazy.window.togroup(i.name)),
+        ]),
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
-        Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            desc="Move focused window to group {}".format(i.name)),
-
-    ])
-
-
+    
 
 
 layouts = [
@@ -141,8 +162,16 @@ extension_defaults = widget_defaults.copy()
 screens = [
     Screen(
         top=bar.Bar(
-            [
-                widget.GroupBox(),
+            [   
+                widget.Image(
+                    filename="~/.config/qtile/icons/jellyfish.png",
+                    margin_x = 6,
+                    margin_y= 2,
+                    mouse_callbacks={'Button1': lazy.spawn(rofiLaunch)},
+                ),
+                widget.GroupBox(
+                    active="#FF4151"
+                ),
                 widget.Prompt(),
                 widget.WindowName(),
                 widget.Chord(
@@ -156,35 +185,20 @@ screens = [
                 widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
                 widget.QuickExit(),
             ],
-            24,
-             border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
-        ),
-    ),
-]
-screens = [
-    Screen(
-        top=bar.Bar(
-            [
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        'launch': ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
+            20,
+             border_width=[3, 9, 2, 9],  # Draw top and bottom borders
+             margin = 4,
+             border_color= "#BF616A",
+             background =   "#BF616A",
 
-                widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
-                widget.QuickExit(),
-            ],
-            24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+	
+
+
+
         ),
     ),
 ]
+
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
